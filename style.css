@@ -1,114 +1,169 @@
-/* Estilos básicos para o corpo e o aplicativo */
-body {
-    font-family: Arial, sans-serif;
+/* Reset básico para remover margens e paddings padrão */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
 }
 
-.app {
-    max-width: 900px;
-    margin: 0 auto;
+/* Estilos para o aplicativo principal */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para as abas */
+/* Container do aplicativo */
+.app {
+    width: 100%;
+    max-width: 800px;
+    background-color: #111;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Estilos para as abas */
 .tabs {
     display: flex;
-    margin-bottom: 20px;
+    justify-content: space-around;
+    background-color: #222;
 }
 
 .tab {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #e0e0e0;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 15px 20px;
     cursor: pointer;
+    flex: 1;
+    text-align: center;
+    border-radius: 0 0 8px 8px;
+    transition: background-color 0.3s;
 }
 
 .tab:hover {
-    background-color: #d0d0d0;
+    background-color: #444;
 }
 
+.tab.active {
+    background-color: #555;
+}
+
+/* Estilos para o conteúdo das abas */
 .tab-content {
-    display: none;
+    padding: 20px;
+    color: #fff;
 }
 
-.tab-content.hidden {
-    display: none;
+/* Estilos para o formulário */
+.form {
+    margin: 20px 0;
 }
 
-.tab-content:not(.hidden) {
+input[type="text"],
+input[type="number"],
+textarea {
     display: block;
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+    font-size: 16px;
 }
 
-/* Estilo para os botões */
+/* Estilos para os botões */
 .action-btn {
-    background-color: #007bff;
+    background-color: #333;
     color: #fff;
     border: none;
-    padding: 10px 15px;
-    margin: 5px 0;
-    border-radius: 5px;
+    padding: 12px 20px;
     cursor: pointer;
-    font-size: 14px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .action-btn:hover {
-    background-color: #0056b3;
+    background-color: #444;
 }
 
-.delete-btn {
-    background-color: #dc3545;
+.action-btn:active {
+    transform: scale(0.98);
 }
 
-.delete-btn:hover {
-    background-color: #c82333;
-}
-
-/* Estilo para o formulário */
-.form {
-    margin-top: 20px;
-}
-
-.form input[type="text"],
-.form input[type="number"],
-.form input[type="file"] {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Estilo para a lista de personagens */
-.character-item {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-}
-
-.character-item img {
-    max-width: 100px;
-    max-height: 100px;
-    margin-bottom: 10px;
-    display: block;
-}
-
-/* Estilo para o bloco de notas */
-#notesArea {
-    width: 100%;
+/* Estilos para o bloco de notas */
+textarea {
     height: 200px;
+    resize: none;
+    font-size: 16px;
+}
+
+/* Ocultar elementos */
+.hidden {
+    display: none;
+}
+
+/* Estilos adicionais para itens de ficha */
+.character-item {
+    background-color: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.character-item button {
+    background-color: #555;
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.character-item button:hover {
+    background-color: #666;
+}
+
+/* Estilos para o botão de exclusão */
+.character-item button.delete-btn {
+    background-color: #e74c3c;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.character-item button.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+/* Estilos para a calculadora */
+.calc-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+#calcDisplay {
+    width: calc(100% - 20px);
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 10px;
+    margin: 10px 0;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #222;
+    color: #fff;
+    font-size: 20px;
+    text-align: right;
 }
