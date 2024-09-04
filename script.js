@@ -15,25 +15,37 @@ function createCharacter() {
     const name = document.getElementById('charName').value;
     const life = document.getElementById('charLife').value;
     const energy = document.getElementById('charEnergy').value;
+    const image = document.getElementById('charImage').files[0];
+    
     if (name && life && energy) {
-        const characterItem = document.createElement('div');
-        characterItem.className = 'character-item';
-        characterItem.innerHTML = `
-            <strong>${name}</strong><br>
-            Vida: ${life}<br>
-            Energia: ${energy}
-            <button class="action-btn" onclick="editCharacter(this)">Editar</button>
-            <button class="delete-btn" onclick="deleteCharacter('${name}', this)">Excluir</button>
-        `;
-        document.getElementById('charactersList').appendChild(characterItem);
-        // Salvar personagem no localStorage
-        saveCharacter(name, life, energy);
-        // Limpar campos após criação
-        document.getElementById('charName').value = '';
-        document.getElementById('charLife').value = '';
-        document.getElementById('charEnergy').value = '';
-        document.getElementById('createForm').classList.add('hidden');
-        console.log('Ficha criada com sucesso.');
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const characterItem = document.createElement('div');
+            characterItem.className = 'character-item';
+            characterItem.innerHTML = `
+                <img src="${e.target.result}" alt="Imagem do personagem" class="character-image"/><br>
+                <strong>${name}</strong><br>
+                Vida: ${life}<br>
+                Energia: ${energy}
+                <button class="action-btn" onclick="editCharacter(this)">Editar</button>
+                <button class="delete-btn" onclick="deleteCharacter('${name}', this)">Excluir</button>
+            `;
+            document.getElementById('charactersList').appendChild(characterItem);
+            // Salvar personagem no localStorage
+            saveCharacter(name, life, energy, e.target.result);
+            // Limpar campos após criação
+            document.getElementById('charName').value = '';
+            document.getElementById('charLife').value = '';
+            document.getElementById('charEnergy').value = '';
+            document.getElementById('charImage').value = ''; // Limpar o campo de imagem
+            document.getElementById('createForm').classList.add('hidden');
+            console.log('Ficha criada com sucesso.');
+        }
+        if (image) {
+            reader.readAsDataURL(image); // Ler a imagem como URL
+        } else {
+            alert('Selecione uma imagem!');
+        }
     } else {
         console.log('Erro: Preencha todos os campos.');
         alert('Preencha todos os campos!');
@@ -41,9 +53,9 @@ function createCharacter() {
 }
 
 // Função para salvar o personagem no localStorage
-function saveCharacter(name, life, energy) {
+function saveCharacter(name, life, energy, image) {
     const characters = JSON.parse(localStorage.getItem('characters')) || [];
-    characters.push({ name, life, energy });
+    characters.push({ name, life, energy, image });
     localStorage.setItem('characters', JSON.stringify(characters));
 }
 
@@ -67,6 +79,7 @@ function loadCharacters() {
         const characterItem = document.createElement('div');
         characterItem.className = 'character-item';
         characterItem.innerHTML = `
+            <img src="${character.image}" alt="Imagem do personagem" class="character-image"/><br>
             <strong>${character.name}</strong><br>
             Vida: ${character.life}<br>
             Energia: ${character.energy}
@@ -90,9 +103,12 @@ function editCharacter(button) {
     const name = characterItem.querySelector('strong').textContent;
     const life = characterItem.querySelector('br').nextSibling.textContent.replace('Vida: ', '');
     const energy = characterItem.querySelector('br').nextSibling.nextSibling.textContent.replace('Energia: ', '');
+    const image = characterItem.querySelector('img').src;
+
     document.getElementById('charName').value = name;
     document.getElementById('charLife').value = life;
     document.getElementById('charEnergy').value = energy;
+    document.getElementById('charImage').value = ''; // Resetar o campo de imagem
     document.getElementById('createForm').classList.remove('hidden');
     // Remover o personagem da lista e do localStorage para atualização
     characterItem.remove();
