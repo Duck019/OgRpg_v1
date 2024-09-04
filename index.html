@@ -1,168 +1,182 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - OgRpg_v1</title>
+  <title>OgRpg_v1</title>
   <link rel="stylesheet" href="./style.css">
-
 </head>
+
 <body>
 <!-- partial:index.partial.html -->
 <!doctype html>
-
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>App RPG</title>
-
     <link rel="stylesheet" href="styles.css">
-
 </head>
 
 <body>
-
     <!-- Aplicativo Principal -->
-
     <div id="app" class="app">
 
         <div class="tabs">
-
             <button class="tab" onclick="showTab('character')">Fichas</button>
-
             <button class="tab" onclick="showTab('dice')">Dados</button>
-
             <button class="tab" onclick="showTab('notes')">Notas</button>
-
             <button class="tab" onclick="showTab('calculator')">Calculadora</button>
-
         </div>
 
         <!-- Aba Fichas -->
-
         <div id="character" class="tab-content">
-
             <h2>Ficha de Personagem</h2>
-
             <button class="action-btn" onclick="showCreateForm()">+ Criar Ficha</button>
 
             <div id="createForm" class="form hidden">
-
                 <input type="text" id="charName" placeholder="Nome">
-
                 <input type="number" id="charLife" placeholder="Vida">
-
                 <input type="number" id="charEnergy" placeholder="Energia">
-
                 <button class="action-btn" onclick="createCharacter()">Criar Ficha</button>
-
             </div>
 
             <div id="charactersList"></div>
-
         </div>
 
         <!-- Aba Dados -->
-
         <div id="dice" class="tab-content hidden">
-
             <h2>Dado Virtual</h2>
-
             <button class="action-btn" onclick="rollDice(3)">d3</button>
-
             <button class="action-btn" onclick="rollDice(6)">d6</button>
-
             <button class="action-btn" onclick="rollDice(8)">d8</button>
-
             <button class="action-btn" onclick="rollDice(10)">d10</button>
-
             <button class="action-btn" onclick="rollDice(20)">d20</button>
-
             <button class="action-btn" onclick="rollDice(100)">d100</button>
 
             <h3>Rolar Dois Dados</h3>
-
             <input type="number" id="dice1Sides" placeholder="Lados do Dado 1" min="2">
-
             <input type="number" id="dice2Sides" placeholder="Lados do Dado 2" min="2">
-
             <button class="action-btn" onclick="rollTwoDice()">Rolar</button>
 
             <p id="diceResult">Resultado: -</p>
-
         </div>
 
         <!-- Aba Notas -->
-
         <div id="notes" class="tab-content hidden">
-
             <h2>Bloco de Notas</h2>
-
             <textarea id="notesArea" placeholder="Anotações..."></textarea>
-
             <button class="action-btn" onclick="saveNotes()">Salvar Notas</button>
-
         </div>
 
         <!-- Aba Calculadora -->
-
         <div id="calculator" class="tab-content hidden">
-
             <h2>Calculadora</h2>
-
             <input type="text" id="calcDisplay" readonly>
-
             <div class="calc-buttons">
-
                 <button class="action-btn" onclick="appendToDisplay('1')">1</button>
-
                 <button class="action-btn" onclick="appendToDisplay('2')">2</button>
-
                 <button class="action-btn" onclick="appendToDisplay('3')">3</button>
-
                 <button class="action-btn" onclick="appendToDisplay('+')">+</button>
-
                 <button class="action-btn" onclick="appendToDisplay('4')">4</button>
-
                 <button class="action-btn" onclick="appendToDisplay('5')">5</button>
-
                 <button class="action-btn" onclick="appendToDisplay('6')">6</button>
-
                 <button class="action-btn" onclick="appendToDisplay('-')">-</button>
-
                 <button class="action-btn" onclick="appendToDisplay('7')">7</button>
-
                 <button class="action-btn" onclick="appendToDisplay('8')">8</button>
-
                 <button class="action-btn" onclick="appendToDisplay('9')">9</button>
-
                 <button class="action-btn" onclick="appendToDisplay('*')">×</button>
-
                 <button class="action-btn" onclick="appendToDisplay('0')">0</button>
-
                 <button class="action-btn" onclick="appendToDisplay('.')">.</button>
-
                 <button class="action-btn" onclick="calculateResult()">=</button>
-
                 <button class="action-btn" onclick="clearDisplay()">C</button>
-
             </div>
-
         </div>
-
     </div>
 
     <script src="script.js"></script>
 
-</body>
+    <script>
+        // Função para mostrar a aba selecionada
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+        }
 
-</html>
-<!-- partial -->
-  <script  src="./script.js"></script>
+        // Função para exibir o formulário de criação de personagem
+        function showCreateForm() {
+            document.getElementById('createForm').classList.toggle('hidden');
+        }
+
+        // Função para criar uma ficha de personagem
+        function createCharacter() {
+            const name = document.getElementById('charName').value;
+            const life = document.getElementById('charLife').value;
+            const energy = document.getElementById('charEnergy').value;
+
+            if (name && life && energy) {
+                const characterItem = document.createElement('div');
+                characterItem.className = 'character-item';
+                characterItem.innerHTML = `
+                    <strong>${name}</strong><br>
+                    Vida: ${life}<br>
+                    Energia: ${energy}
+                    <button class="action-btn" onclick="editCharacter(this)">Editar</button>
+                    <button class="delete-btn" onclick="deleteCharacter('${name}', this)">Excluir</button>
+                `;
+                document.getElementById('charactersList').appendChild(characterItem);
+
+                // Salvar personagem no localStorage
+                saveCharacter(name, life, energy);
+
+                // Limpar campos após criação
+                document.getElementById('charName').value = '';
+                document.getElementById('charLife').value = '';
+                document.getElementById('charEnergy').value = '';
+                document.getElementById('createForm').classList.add('hidden');
+            } else {
+                alert('Preencha todos os campos!');
+            }
+        }
+
+        // Função para excluir o personagem do localStorage e da interface
+        function deleteCharacter(name, element) {
+            element.parentElement.remove();
+
+            // Remover o personagem do localStorage
+            let characters = JSON.parse(localStorage.getItem('characters')) || [];
+            characters = characters.filter(character => character.name !== name);
+            localStorage.setItem('characters', JSON.stringify(characters));
+        }
+
+        // Função para carregar personagens do localStorage
+        function loadCharacters() {
+            const characters = JSON.parse(localStorage.getItem('characters')) || [];
+            characters.forEach(character => {
+                const characterItem = document.createElement('div');
+                characterItem.className = 'character-item';
+                characterItem.innerHTML = `
+                    <strong>${character.name}</strong><br>
+                    Vida: ${character.life}<br>
+                    Energia: ${character.energy}
+                    <button class="action-btn" onclick="editCharacter(this)">Editar</button>
+                    <button class="delete-btn" onclick="deleteCharacter('${character.name}', this)">Excluir</button>
+                `;
+                document.getElementById('charactersList').appendChild(characterItem);
+            });
+        }
+
+        // Função para salvar personagens no localStorage
+        function saveCharacter(name, life, energy) {
+            const character = { name, life, energy };
+            let characters = JSON.parse(localStorage.getItem('characters')) || [];
+            characters.push(character);
+            localStorage.setItem('characters', JSON.stringify(characters));
+        }
+
+        // Carregar personagens ao iniciar o aplicativo
+        window.onload = loadCharacters;
+    </script>
 
 </body>
 </html>
