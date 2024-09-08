@@ -1,11 +1,24 @@
+
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OgRpg_v1</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+<!-- partial:index.partial.html -->
+<!doctype html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>App RPG</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Aplicativo Principal -->
     <div id="app" class="app">
@@ -26,7 +39,6 @@
                 <input type="text" id="charName" placeholder="Nome">
                 <input type="number" id="charLife" placeholder="Vida">
                 <input type="number" id="charEnergy" placeholder="Energia">
-                <input type="file" id="charImage" accept="image/*">
                 <button class="action-btn" onclick="createCharacter()">Criar Ficha</button>
             </div>
 
@@ -102,35 +114,27 @@
             const name = document.getElementById('charName').value;
             const life = document.getElementById('charLife').value;
             const energy = document.getElementById('charEnergy').value;
-            const imageInput = document.getElementById('charImage');
-            const imageFile = imageInput.files[0];
-            const reader = new FileReader();
 
             if (name && life && energy) {
-                reader.onload = function (event) {
-                    const characterItem = document.createElement('div');
-                    characterItem.className = 'character-item';
-                    characterItem.innerHTML = `
-                        <img src="${event.target.result}" alt="${name}">
-                        <strong>${name}</strong><br>
-                        Vida: ${life}<br>
-                        Energia: ${energy}
-                        <button class="action-btn" onclick="editCharacter(this)">Editar</button>
-                        <button class="delete-btn" onclick="deleteCharacter('${name}', this)">Excluir</button>
-                    `;
-                    document.getElementById('charactersList').appendChild(characterItem);
+                const characterItem = document.createElement('div');
+                characterItem.className = 'character-item';
+                characterItem.innerHTML = `
+                    <strong>${name}</strong><br>
+                    Vida: ${life}<br>
+                    Energia: ${energy}
+                    <button class="action-btn" onclick="editCharacter(this)">Editar</button>
+                    <button class="delete-btn" onclick="deleteCharacter('${name}', this)">Excluir</button>
+                `;
+                document.getElementById('charactersList').appendChild(characterItem);
 
-                    // Salvar personagem no localStorage
-                    saveCharacter(name, life, energy, event.target.result);
+                // Salvar personagem no localStorage
+                saveCharacter(name, life, energy);
 
-                    // Limpar campos após criação
-                    document.getElementById('charName').value = '';
-                    document.getElementById('charLife').value = '';
-                    document.getElementById('charEnergy').value = '';
-                    imageInput.value = ''; // Limpar seleção de arquivo
-                    document.getElementById('createForm').classList.add('hidden');
-                };
-                reader.readAsDataURL(imageFile); // Lê o arquivo como URL de dados
+                // Limpar campos após criação
+                document.getElementById('charName').value = '';
+                document.getElementById('charLife').value = '';
+                document.getElementById('charEnergy').value = '';
+                document.getElementById('createForm').classList.add('hidden');
             } else {
                 alert('Preencha todos os campos!');
             }
@@ -153,7 +157,6 @@
                 const characterItem = document.createElement('div');
                 characterItem.className = 'character-item';
                 characterItem.innerHTML = `
-                    <img src="${character.image}" alt="${character.name}">
                     <strong>${character.name}</strong><br>
                     Vida: ${character.life}<br>
                     Energia: ${character.energy}
@@ -165,8 +168,8 @@
         }
 
         // Função para salvar personagens no localStorage
-        function saveCharacter(name, life, energy, image) {
-            const character = { name, life, energy, image };
+        function saveCharacter(name, life, energy) {
+            const character = { name, life, energy };
             let characters = JSON.parse(localStorage.getItem('characters')) || [];
             characters.push(character);
             localStorage.setItem('characters', JSON.stringify(characters));
@@ -175,5 +178,6 @@
         // Carregar personagens ao iniciar o aplicativo
         window.onload = loadCharacters;
     </script>
+
 </body>
 </html>
